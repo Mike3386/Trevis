@@ -1,0 +1,13 @@
+{
+  "db": {
+    "host": "127.0.0.1",
+    "name": "lab22",
+    "user": "root",
+    "password": "123456"
+  },
+  "env": "dev",
+  "cookie": {
+    "key": "secret key",
+    "auth": "__user_id"
+  }
+}
