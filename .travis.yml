@@ -5,6 +5,6 @@ notifications:
     on_failure: change
 node_js:
   - "node"
-  - "6"
+  - "7"
 before_script:
   - npm install
