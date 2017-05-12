@@ -80,6 +80,6 @@ app.use('/api',function(req, res, next) {
 dbcontext.sequelize
     .sync()
     .then(() => {
-        app.listen(3000, () => console.log('Running on http://localhost:3000'));
+        app.listen(proccess.env.PORT||3000, () => console.log('Running on http://localhost:3000'));
     })
     .catch((err) => console.log(err));

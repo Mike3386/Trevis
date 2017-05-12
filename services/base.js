@@ -60,6 +60,7 @@ function BaseService(repository, errors) {
 
     function baseCreate(data) {
         return new Promise((resolve, reject) => {
+            console.log("a");
             repository.create(data)
                 .then(resolve).catch(reject);
         });

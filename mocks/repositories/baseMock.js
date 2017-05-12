@@ -3,46 +3,46 @@ const Errors = require('../../utils/errors.js');
 
 module.exports = 
 class Mock{
-        objects;
-        
-        constructor(){
+        constructor() {
             this.objects = [];
-        
         }
+        
         async findOne(id) {
-            return objects[id];
+            return this.objects[id];
         };
 
         async create(data) {
-            if (this.find(data) == null) objects.push(data);
-            else throw Errors.notFound;
+            if (this.objects.find((dt)=>{JSON.stringify(data)==JSON.stringify(dt)})) throw Errors.notFound;
+            else this.objects.push(data);        
+            console.log("c1");
+            return data;
         };
 
-        /*find = async(options) =>{
-            return objects.find((elem) => elem.name = options.where.name);
+        async find(options) {
+            return this.objects.find((elem) => elem.name === options.where.name);
         };
 
-        findAndCountAll = async(options) => {
-            var arr = objects.splice(options.offset,options.limit);
+        async findAndCountAll(options) {
+            var arr = this.objects.splice(options.offset,options.limit);
             
             return {
                 'rows': arr,
-                'count': objects.count
+                'count': this.objects.count
             }
-        };*/
+        };
 
         async findById(id) {
-            let elem = objects[id];
-            if (elem == null) Errors.notFound;
+            let elem = this.objects[id];
+            if (elem === undefined) return null;
             else return elem;
         }
 
-        /*destroy = async (opt) => {
-            objects.delete(opt.where.id);
+        async destroy (opt) {
+            this.objects.delete(opt.where.id);
             return;
         }
 
-        update = async (data, opt) => {
-            objects[opt.where.id] = data;
-        }*/
+        async update (data, opt) {
+            this.objects[opt.where.id] = data;
+        }
 }

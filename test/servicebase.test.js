@@ -4,15 +4,22 @@ let mock = require('../mocks/repositories/baseMock');
 let baseRep = new mock();
 let bs = require('../services/base');
 let baseService = new bs(baseRep, errors);
+
 describe('Service base', () => {
-    it('test - read failed', async () => {
-        try {
-            expect(1).toEqual(1);
-            //let obj = await baseService.read(4);
-        }
-        catch (err){
-            //console.log(err);
-            //expect(err).toEqual(errors.notFound);
-        }
+    beforeAll(async () => {
+        await baseService.baseCreate({a:"a"});
+        await baseService.baseCreate({a:"b"});
+        await baseService.baseCreate({a:"c"});
+        await baseService.baseCreate({a:"d"});
+    })
+
+    it('test - read new ', async () => {
+        let obj;
+        try{
+            obj = await baseService.read(7);
+        }catch(err){obj = null};
+        let obj2 = await baseService.read(2);
+        expect(obj).toBeNull();
+        expect(obj2).toEqual({a:"c"});
     })
 });
