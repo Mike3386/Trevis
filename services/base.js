@@ -51,7 +51,6 @@ function BaseService(repository, errors) {
 
             repository.findById(id, {raw: true})
                 .then((post) => {
-                    console.log(post);
                     if (post === null) reject(errors.notFound);
                     else resolve(post);
                 })
