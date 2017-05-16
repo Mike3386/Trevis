@@ -1,29 +1,32 @@
 'use strict';
 const Errors = require('../../utils/errors.js');
 
-module.exports = 
 class Mock{
         constructor() {
             this.objects = [];
             this.id = 0;
         }
+
+        isEqualsObjects(a,b){
+            return ((a.text === b.text));
+        }
         
         async findOne(id) {
-            return objects.find((elem)=> elem.id = id);
+            return this.objects.find((elem)=> elem.id = id);
         };
 
         async create(data) {
-            let id;
-            if (this.objects.findIndex()) throw Errors.notFound;
-            else this.objects.push(data);
+            if ((this.objects.findIndex((a)=>this.isEqualsObjects(a,data))) === -1) throw Errors.notFound;
+
+            data.id = this.id++;
+            this.objects.push(data);
             return data;
         };
 
-        async find(options) {
+        async findOne(options) {
             let id;
-            id = this.objects.findIndex((elem) => elem.name === options.where.name);
+            id = this.objects.findIndex((elem) => elem.text === options.where.text);
             let data = object[id];
-            data.id = id;
             return data;
         };
 
@@ -37,17 +40,31 @@ class Mock{
         };
 
         async findById(id) {
-            let elem = this.objects[id];
-            if (elem === undefined) return null;
-            else return elem;
+            let id;
+            id = this.objects.findIndex((elem) => elem.id === id);
+            if (id === -1) return null;
+            else return this.objects[id];
         }
 
-        async destroy (opt) {
-            this.objects.delete(opt.where.id);
-            return;
+        async destroy(opt) {
+            let id = this.objects.findIndex((el)=>el.id===id);
+
+            if(id!==-1){
+                let ro = Object.assign({}, this.objects[id]);
+                this.objects.delete(id);
+                return ro;
+            }
+            else throw Errors.notFound;
         }
 
-        async update (data, opt) {
-            this.objects[opt.where.id] = data;
+        async update(data, opt) {
+            this.objects.forEach((elem) =>{
+               if(elem.id === opt.where.id)
+                       elem = Object.assign({}, elem, data);
+            });
+
         }
 }
+
+
+module.exports = Mock;
