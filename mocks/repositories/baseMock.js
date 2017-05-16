@@ -5,21 +5,26 @@ module.exports =
 class Mock{
         constructor() {
             this.objects = [];
+            this.id = 0;
         }
         
         async findOne(id) {
-            return this.objects[id];
+            return objects.find((elem)=> elem.id = id);
         };
 
         async create(data) {
-            if (this.objects.find((dt)=>{JSON.stringify(data)==JSON.stringify(dt)})) throw Errors.notFound;
-            else this.objects.push(data);        
-            console.log("c1");
+            let id;
+            if (this.objects.findIndex()) throw Errors.notFound;
+            else this.objects.push(data);
             return data;
         };
 
         async find(options) {
-            return this.objects.find((elem) => elem.name === options.where.name);
+            let id;
+            id = this.objects.findIndex((elem) => elem.name === options.where.name);
+            let data = object[id];
+            data.id = id;
+            return data;
         };
 
         async findAndCountAll(options) {
