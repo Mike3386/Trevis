@@ -9,5 +9,21 @@
   "cookie": {
     "key": "secret key",
     "auth": "__user_id"
+  },
+  "easyXml" : {
+    "singularizeChildren": "true",
+    "underscoreAttributes": "true",
+    "rootElement": "response",
+    "dateFormat": "SQL",
+    "indent": "2",
+    "manifest": "true"
+  }
+  "bodyXml":{
+    "limit": "1MB",
+    "xmlParseOptions": {
+      "normalize": "true",
+      "normalizeTags": "true",
+      "explicitArray": "false"
+    }
   }
 }

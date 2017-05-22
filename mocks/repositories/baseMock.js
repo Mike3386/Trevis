@@ -1,13 +1,21 @@
 'use strict';
 
-class Mock{
+class Mock {
     constructor() {
         this.objects = [];
         this.id = 0;
     }
 
+    isEqualCreate(a, b) {
+        return a.text === b.text;
+    }
+
+    isEqualFindOne(a, opt) {
+        return a.text === opt.where.text;
+    }
+
     async create(data) {
-        if ((this.objects.findIndex((a) => a.text === data.text)) !== -1) throw "Error, duplicate";
+        if ((this.objects.findIndex((a) => this.isEqualCreate(a, data))) !== -1) throw "Error, duplicate";
 
         data.id = this.id++;
         this.objects.push(data);
@@ -15,9 +23,20 @@ class Mock{
     };
 
     async findOne(options) {
-        let id;
-        id = this.objects.findIndex((elem) => elem.text === options.where.text);
-        return object[id];
+        let id = this.objects.findIndex((elem) => this.isEqualFindOne(elem, options));
+        return (id !== -1) ? object[id] : null;
+    };
+
+    async find(options) {
+        let id = this.objects.findIndex((elem) => this.isEqualFindOne(elem, options));
+        return (id !== -1) ? object[id] : null;
+    };
+
+    async findAll(options) {
+        let out = this.objects.filter((elem) => {
+            return this.isEqualFindOne(elem, options);
+        });
+        return out;
     };
 
     async findAndCountAll(options) {
@@ -47,13 +66,14 @@ class Mock{
     async update(data, opt) {
         let obj = [];
         let count = 0;
-        let out = this.objects.map((elem)=>{
-            if(elem.id === opt.where.id && count < opt.limit){
+        let out = this.objects.map((elem) => {
+            if (elem.id === opt.where.id && count < opt.limit) {
                 count++;
-                obj.push(JSON.parse(JSON.stringify(elem)));
-                return Object.assign({}, elem, data);
+                elem = Object.assign({}, elem, data);
+                obj.push(elem);
+                return elem;
             }
-            else return elem;
+            return elem;
         });
 
         this.objects.length = 0;

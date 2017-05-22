@@ -4,7 +4,7 @@ module.exports = (userRepository, roleRepository, errors) => {
 
     Object.setPrototypeOf(UserService.prototype, BaseService.prototype);
 
-    function UserService(userRepository, roleRepository, errors) {
+    function UserService(userRepository, errors) {
         BaseService.call(this, userRepository, errors);
 
         let self = this;
@@ -35,36 +35,6 @@ module.exports = (userRepository, roleRepository, errors) => {
 
                 self.baseUpdate(data.id, user)
                     .then(resolve).catch(reject);
-            });
-        }
-        
-        function grant(userId, roleId) {
-            return new Promise((resolve, reject) => {
-                Promise
-                    .all([
-                        userRepository.findById(userId),
-                        roleRepository.findById(roleId)
-                    ])
-                    .then(([user, role]) => {
-                        return user.addRole(role);
-                    })
-                    .then(() => resolve({ success: true }))
-                    .catch(reject);
-            });
-        }
-        
-        function revoke(userId, roleId) {
-            return new Promise((resolve, reject) => {
-                Promise
-                    .all([
-                        userRepository.findById(userId),
-                        roleRepository.findById(roleId)
-                    ])
-                    .then(([user, role]) => {
-                        return user.removeRole(role);
-                    })
-                    .then(() => resolve({ success: true }))
-                    .catch(reject);
             });
         }
     }

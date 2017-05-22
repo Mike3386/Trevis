@@ -1,8 +1,9 @@
 'use strict';
 const jwt = require('jsonwebtoken');
-var request = require('request');
-var Promise = require("bluebird");
+const request = require('request');
+const Promise = require("bluebird");
 const errors = require("../utils/errors");
+Promise.promisify(jwt.verify);
 module.exports = (domainRepository, userRepository, errors) => {
     const BaseService = require('./base');
 
@@ -25,8 +26,7 @@ module.exports = (domainRepository, userRepository, errors) => {
                     status: "not paid"
                 };
                 domainRepository.find({where:{name:domainName}}).then((domain1)=>{
-                    if(!domain1)
-                    return self.baseCreate(domain);
+                    if(!domain1) return self.baseCreate(domain);
                     else resolve(errors.CreateDomainExists);
                 }).then((domain2) => {
                         resolve(domain2)
@@ -36,14 +36,12 @@ module.exports = (domainRepository, userRepository, errors) => {
 
         function update(data) {
             return new Promise((resolve, reject) => {
-                let post = {
-                    title: data.title,
-                    content: data.content,
-                    date: data.date,
-                    draft: data.draft
+                let domain = {
+                    name: data.name,
+                    status: data.status
                 };
 
-                self.baseUpdate(data.id, post)
+                self.baseUpdate(data.id, domain)
                     .then(resolve).catch(reject);
             });
         }
@@ -66,7 +64,7 @@ module.exports = (domainRepository, userRepository, errors) => {
                                 where: {name: domain}
                             })
                             .then((domain) => {
-                                if (domain.length != 0) 
+                                if (domain.length !== 0)
                                     resolve({status: "domain already use"})
                                 else
                                     resolve({status: "domain free"})
@@ -85,18 +83,15 @@ module.exports = (domainRepository, userRepository, errors) => {
 
                 if (tokenUserId) {
                     jwt.verify(tokenUserId, 'shhhhh', function (err, decoded) {
-                        if (err != null) reject(errors.Unauthorized);
+                        if (err !== null) reject(errors.Unauthorized);
                         else {
                             var userId = decoded.__user_id;
                             id = parseInt(id);
-                            var domain = {
-                                status: "paid"
-                            };
                             Promise.all([
                                 domainRepository.findById(id),
                                 userRepository.findById(userId)
                             ]).spread((dmn, user) => {
-                                if (dmn.dataValues.status == "paid")
+                                if (dmn.dataValues.status === "paid")
                                     reject(errors.PaymentDomainUse);
                                 else {
                                 return Promise.all([
@@ -109,7 +104,7 @@ module.exports = (domainRepository, userRepository, errors) => {
                                 ]);
                                 }
                             }).spread((domain, user, dmn) => {
-                                if (user.dataValues.cache - 20 < 0) reject(errors.PaymentRequired)
+                                if (user.dataValues.cache - 20 < 0) reject(errors.PaymentRequired);
                                 resolve({success: true})
                             });
                         }

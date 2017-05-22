@@ -9,8 +9,9 @@
     "easyxml": "^2.0.1",
     "express": "^4.14.0",
     "express-query-int": "^1.0.1",
-    "jsonwebtoken": "^7.3.0",
     "jest": "^19.0.2",
+    "jsonwebtoken": "^7.3.0",
+    "mock-require": "^2.0.2",
     "mysql": "^2.11.1",
     "needle": "^1.4.5",
     "randomstring": "^1.1.5",
@@ -21,6 +22,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "sequelize-mock": "^0.7.0"
+    "sequelize-mock": "^0.7.0",
+    "supertest": "^3.0.0"
   }
 }
