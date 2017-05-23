@@ -16,6 +16,11 @@ express.response.error = function(error) {
 };
 
 module.exports = {
+    lowUserRole: {
+        message: 'Low user role',
+        code: 'low_user_role',
+        status: 403
+    },
     invalidId: {
         message: 'Bad request',
         code: 'bad_request',

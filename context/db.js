@@ -17,14 +17,14 @@ module.exports = (Sequelize, config) => {
     const sequelize = new Sequelize(config.db.name, config.db.user, config.db.password, options);
 
     const User = require('../models/user')(Sequelize, sequelize);
-    const Domain = require('../models/domain')(Sequelize, sequelize);
+    const Role = require('../models/role')(Sequelize, sequelize);
 
-    Domain.belongsTo(User);
-    User.hasMany(Domain);
+    User.belongsTo(Role);
+    Role.hasMany(User);
 
     return {
         user: User,
-        domain: Domain,
+        role: Role,
 
         sequelize: sequelize
     };

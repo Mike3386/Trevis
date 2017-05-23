@@ -1,10 +1,12 @@
 'use strict';
 module.exports = (Sequelize, sequelize) => {
-    return sequelize.define('domainUsers', {
+    return sequelize.define('role', {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true
-        }
+        },
+
+        name: Sequelize.STRING
     });
 };

@@ -1,5 +1,6 @@
 'use strict';
-module.exports = (req, res, next) => {
+module.exports = (serializer) => {
+    return (req, res, next) => {
         res.sendData = function(obj) {
             let contentType = req.headers['content-type'];
             if (contentType === 'application/json') {
@@ -13,4 +14,5 @@ module.exports = (req, res, next) => {
             else res.send(obj);
         };
         next();
+    };
 };

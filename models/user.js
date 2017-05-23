@@ -9,11 +9,7 @@ module.exports = (Sequelize, sequelize) => {
 
         email: Sequelize.STRING,
         password: Sequelize.STRING,
-
-        fullname: Sequelize.STRING,
-        cache: {
-            type: Sequelize.INTEGER,
-            defaultValue: 1000
-        }
+        firstname: Sequelize.STRING,
+        lastname: Sequelize.STRING
     });
 };

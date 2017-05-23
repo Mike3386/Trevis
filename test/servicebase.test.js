@@ -30,8 +30,7 @@ describe('Service base', () => {
     });
 
     it('delete', async () => {
-        let elem = await baseService.delete(1);
-        expect(elem).toEqual({success: true});
+        let elem = await baseService.baseDelete(1);
         expect(baseService.read(1)).toThrow();
     });
 
@@ -46,57 +45,4 @@ describe('Service base', () => {
         let items = await baseService.readChunk();
         expect(items.data.length).toEqual(3);
     })
-});
-
-describe('Service domains', () =>{
-    beforeAll(() => {
-        mock('request', function (parms, callback){
-            if(parms)
-                callback(null, null,{
-                    status: [
-                        {
-                            domain: "kufiks.com",
-                            zone: "com",
-                            status: "undelegated inactive",
-                            summary: "inactive"
-                        }
-                    ]
-                });
-        });
-        /*
-         mock('request', function (parms, callback){
-         if(parms)
-         callback(null, null, {
-         status: [
-         {
-         domain: "google.com",
-         zone: "com",
-         status: "active registrar",
-         summary: "registrar"
-         }
-         ]
-         });
-         });*/
-    });
-
-    it('create', async () => {
-        let domain = await domainService.create('aa');
-        expect(domain.name).toEqual('aa');
-    });
-
-    it('update', async () => {
-        await domainService.create('ии');
-        let domain = await domainService.update({id:1, name:"ии", status : 'multy paid'});
-        expect(domain[1][0].status).toEqual('multy paid');
-    });
-
-    it('check', async () => {
-        try{
-            let domain = await domainService.check('kufiks.com');
-        }catch (err){
-            console.log(err);
-        }
-        //expect(domain).toEqual({status: "domain already use"});
-        expect(domain).toEqual({status: "domain free"});
-    });
 });

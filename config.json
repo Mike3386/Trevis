@@ -1,13 +1,13 @@
 {
   "db": {
     "host": "127.0.0.1",
-    "name": "lab22",
+    "name": "cp",
     "user": "root",
     "password": "123456"
   },
   "env": "dev",
   "cookie": {
-    "key": "secret key",
+    "key": "super puper secret key",
     "auth": "__user_id"
   },
   "easyXml" : {
@@ -17,7 +17,7 @@
     "dateFormat": "SQL",
     "indent": "2",
     "manifest": "true"
-  }
+  },
   "bodyXml":{
     "limit": "1MB",
     "xmlParseOptions": {

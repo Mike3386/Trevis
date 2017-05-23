@@ -1,82 +1,54 @@
 'use strict';
-module.exports = BaseService;
 
-function BaseService(repository, errors) {
-    const defaults = {
-        readChunk: {
-            limit: 10,
-            page: 1,
-            order: 'asc',
-            orderField: 'id'
-        }
+module.exports = class BaseService {
+    constructor(repository, errors) {
+        this.repository = repository;
+        this.errors = errors;
+
+        this.defaultConfig = {
+            readChunk: {
+                limit: 10,
+                page: 1,
+                order: 'asc',
+                orderField: 'id'
+            }
+        };
     };
 
-    let self = this;
+    async readChunk(options) {
+        options = Object.assign({}, this.defaultConfig.readChunk, options);
+        let limit = options.limit;
+        let offset = (options.page - 1) * options.limit;
 
-    this.readChunk = readChunk;
-    this.read = read;
-    this.baseCreate = baseCreate;
-    this.baseUpdate = baseUpdate;
-    this.delete = del;
-
-    function readChunk(options) {
-        return new Promise((resolve, reject) => {
-            options = Object.assign({}, defaults.readChunk, options);
-
-            let limit = options.limit;
-            let offset = (options.page - 1) * options.limit;
-
-            repository
-                .findAndCountAll({
-                    limit: limit,
-                    offset: offset,
-                    order: [[options.orderField, options.order.toUpperCase()]],
-                    raw: true
-                })
-                .then((result)=>resolve({
-                    'data': result.rows,
-                    'recordsTotal': result.count,
-                    'recordsFiltered': result.rows.length})).catch(reject);
+        let result = await this.repository.findAndCountAll({
+            limit: limit,
+            offset: offset,
+            order: [[options.orderField, options.order.toUpperCase()]],
+            raw: true
         });
-    }
 
-    function read(id) {
-        return new Promise((resolve, reject) => {
-            id = parseInt(id);
+        return {
+            'data': result.rows,
+            'recordsTotal': result.count,
+            'recordsFiltered': result.rows.length
+        };
+    };
 
-            if (isNaN(id)) {
-                reject(errors.invalidId);
-                return;
-            }
+    async readById(id) {
+        let post = await this.repository.findById(id, {raw: true});
+        if (post === null) throw this.errors.notFound;
+        return post;
+    };
 
-            repository.findById(id, {raw: true})
-                .then((post) => {
-                    if (post === null) reject(errors.notFound);
-                    else resolve(post);
-                })
-                .catch(reject);
-        });
-    }
+    async baseCreate(data) {
+        return await this.repository.create(data);
+    };
 
-    function baseCreate(data) {
-        return new Promise((resolve, reject) => {
-            repository.create(data)
-                .then(resolve).catch(reject);
-        });
-    }
+    async baseUpdate(id, data) {
+        return this.repository.update(data, {where: {id: id}, limit: 1});
+    };
 
-    function baseUpdate(id, data) {
-        return new Promise((resolve, reject) => {
-            repository.update(data, { where: {id: id}, limit: 1 })
-                .then(resolve).catch(reject);
-        });
-    }
-
-    function del(id) {
-        return new Promise((resolve, reject) => {
-            repository.destroy({where: {id: id}})
-                .then(() => resolve({success: true}))
-                .catch(reject);
-        });
-    }
+    async baseDelete(id) {
+        return this.repository.destroy({where: {id: id}});
+    };
 }
