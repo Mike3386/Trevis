@@ -19,7 +19,7 @@ const apiController = require('./controllers/api')(userService, authService, con
 
 const logger = require('./utils/logger');
 const auth = require('./utils/auth')(dbcontext.user, dbcontext.role, authService, config, errors);
-const xml = require('./utils/xml')(serializer);
+const out = require('./utils/out')(serializer, errors);
 
 module.exports = async () => {
     const app = express();
@@ -32,6 +32,7 @@ module.exports = async () => {
     app.use(auth);
     app.use(express.static('public'));
 
+    app.use(out);
     /*app.use('/api', logger);
     app.use('/api', auth);
     app.use('/api', apiController);
