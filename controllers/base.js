@@ -49,7 +49,7 @@ function BaseController(service, promiseHandler) {
 
             let handlers = self.routes[route];
 
-            if (handlers == undefined) continue;
+            if (handlers === undefined) continue;
 
             for (let handler of handlers) {
                 self.router[handler.method](route, handler.cb);

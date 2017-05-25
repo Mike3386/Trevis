@@ -6,15 +6,16 @@ module.exports = (serializer, errors) => {
         let status = obj.status || 200;
         switch(contentType){
             case 'application/json':
-                res.header('Content-Type', 'application/json');
+                res.status(status).json(obj);
             break;
             case 'application/xml':
                 res.header('Content-Type', 'text/xml');
                 obj = serializer.render(obj);
+                res.status(status).send(obj);
             break;
             default:
-                res.header('Content-Type', 'application/json');
+                res.status(status).json(obj);
         }
-        res.status(status).send(obj);
+
     };
 };

@@ -1,24 +1,16 @@
 'use strict';
 module.exports = (userService, promiseHandler) => {
-    const BaseController = require('./base');
+    const BaseController = require('./base_class');
 
-    Object.setPrototypeOf(UserController.prototype, BaseController.prototype);
+    class UserController extends BaseController {
+        constructor(service, promiseHandler) {
+            super(service, promiseHandler);
+            this.router.put('/', (req, res) => this.pay(req, res));
+        }
 
-    function UserController(userService, promiseHandler) {
-        BaseController.call(this, userService, promiseHandler);
-
-        this.routes['/'] = [{ method: 'put', cb: pay }];
-
-        this.registerRoutes();
-
-        return this.router;
-
-        function pay(req, res) {
-            promiseHandler(res,
-                userService.pay(req.body)
-            );
+        pay(req, res) {
+            this.promiseHandler(res, this.service.pay(req.body));
         }
     }
-
     return new UserController(userService, promiseHandler);
 };

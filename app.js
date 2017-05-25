@@ -20,6 +20,7 @@ const apiController = require('./controllers/api')(userService, authService, con
 const logger = require('./utils/logger');
 const auth = require('./utils/auth')(dbcontext.user, dbcontext.role, authService, config, errors);
 const out = require('./utils/out')(serializer, errors);
+const bodyParams = require('./utils/bodyParams')();
 
 module.exports = async () => {
     const app = express();
@@ -29,13 +30,21 @@ module.exports = async () => {
     app.use(bodyParser.xml(config.bodyXml));
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(queryInt());
+    app.use(bodyParams);
     app.use(auth);
     app.use(express.static('public'));
 
+    /*
+    Main api part
+     */
+    app.use('/api', apiController);
+
+    /*
+    End of main api part
+     */
     app.use(out);
     /*app.use('/api', logger);
     app.use('/api', auth);
-    app.use('/api', apiController);
     app.use('/api', xml);*/
 
     //dbcontext.role.create({name:'user'});

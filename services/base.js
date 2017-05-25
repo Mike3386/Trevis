@@ -35,6 +35,7 @@ module.exports = class BaseService {
     };
 
     async readById(id) {
+        id = parseInt(id);
         let post = await this.repository.findById(id, {raw: true});
         if (post === null) throw this.errors.notFound;
         return post;
