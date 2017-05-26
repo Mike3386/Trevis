@@ -5,12 +5,15 @@ module.exports = (userService, promiseHandler) => {
     class UserController extends BaseController {
         constructor(service, promiseHandler) {
             super(service, promiseHandler);
-            this.router.put('/', (req, res) => this.pay(req, res));
+            this.routes[{path: '/', method: 'get'}]({callback: (req, res) => this.block(req, res)});
+
+
         }
 
         pay(req, res) {
             this.promiseHandler(res, this.service.pay(req.body));
         }
     }
+
     return new UserController(userService, promiseHandler);
 };
