@@ -34,6 +34,7 @@ function AnswerError(error) {
 }
 
 module.exports = {
+    success: Answer('Success', 200),
     lowUserRole: Answer('Low user role', 403),
     invalidId: Answer('Bad request', 400),
     notFound: Answer('Entity not found', 404),

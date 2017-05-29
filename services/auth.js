@@ -1,39 +1,43 @@
 'use strict';
-module.exports = (userRepository, errors) => {
+const messages = require('../utils/messages');
+const config = require('../config.json');
+const bcrypt = require('bcrypt');
+const bluebird = require('bluebird');
+
+bluebird.promisifyAll(bcrypt);
+
+module.exports = (userRepository) => {
     return {
         login: login,
         register: register,
     };
 
     async function login(data) {
-        return new Promise((resolve, reject) => {
-            userRepository
-                .findOne({ where: { email: data.email }, attributes: ['id', 'password'] })
-                .then((user) => {
-                    if (user === null || user.password !== data.password) {
-                        reject(errors.wrongCredentials);
-                        return;
-                    }
-                    resolve(user.id);
-                })
-                .catch(reject);
-        });
+        let user = await userRepository.findOne({where: {email: data.email}, attributes: ['id', 'password']});
+
+        if (user === null || !(await bcrypt.compareAsync(data.password, user.password))) {
+            return;
+        }
+
+        return user.id;
     }
 
-    function register(data) {
-        return new Promise((resolve, reject) => {
+    async function register(data) {
+        let data = await userRepository.findOne({where: {email: data.email}});
+        if (data === null) {
+            data.password = await bcrypt.hashAsync(data.password, config.bcrypt.salt);
+
             let user = {
                 email: data.email,
                 password: data.password,
-                fullname: data.firstname + " " + data.lastname,
+                firstname: data.firstname,
+                lastname: data.lastname
             };
-            userRepository.findOne({ where: { email: user.email }}).
-            then((data)=>{
-                if(data===null) return userRepository.create(user);
-                else return null;
-            }).then((data) => resolve({ success: (data!==null) }))
-                .catch(reject);
-        });
+
+            await userRepository.create(user);
+            return true;
+        }
+        else return false;
     }
 
 };

@@ -1,27 +1,22 @@
 'use strict';
-module.exports = (roleRepository, errors) => {
+const messages = require('../utils/messages');
+
+module.exports = (roleRepository) => {
     const BaseService = require('./base');
 
-    Object.setPrototypeOf(RoleService.prototype, BaseService.prototype);
+    class RoleService extends BaseService {
+        constructor(roleRepository) {
+            super(roleRepository);
+        }
 
-    function RoleService(roleRepository, errors) {
-        BaseService.call(this, roleRepository, errors);
+        async baseCreate(data) {
+            let user = {
+                name: data.name
+            };
 
-        let self = this;
-
-        self.create = create;
-
-        function create(data) {
-            return new Promise((resolve, reject) => {
-                let user = {
-                    name: data.name
-                };
-
-                self.baseCreate(user)
-                    .then(resolve).catch(reject);
-            });
+            return await super.baseCreate(user);
         }
     }
 
-    return new RoleService(roleRepository, errors);
+    return new RoleService(roleRepository);
 };

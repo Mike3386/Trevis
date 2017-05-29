@@ -25,5 +25,8 @@
       "normalizeTags": "true",
       "explicitArray": "false"
     }
+  },
+  "bcrypt":{
+    "salt":"mysecretsaltishere"
   }
 }

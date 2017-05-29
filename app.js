@@ -9,17 +9,16 @@ const queryInt = require('express-query-int');
 const serializer = new EasyXml(config.easyXml);
 require('body-parser-xml')(bodyParser);
 
-const errors = require('./utils/messages');
 const dbcontext = require('./context/db')(Sequelize, config);
 
-const userService = require('./services/user')(dbcontext.user, errors);
-const authService = require('./services/auth')(dbcontext.user, errors);
+const userService = require('./services/user')(dbcontext.user);
+const authService = require('./services/auth')(dbcontext.user);
 
 const apiController = require('./controllers/api')(userService, authService, config);
 
 const logger = require('./utils/logger');
-const auth = require('./utils/auth')(dbcontext.user, dbcontext.role, authService, config, errors);
-const out = require('./utils/out')(serializer, errors);
+const auth = require('./utils/auth')(dbcontext.user, dbcontext.role, authService, config);
+const out = require('./utils/out')(serializer);
 const bodyParams = require('./utils/bodyParams')();
 
 module.exports = async () => {
