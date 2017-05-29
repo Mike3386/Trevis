@@ -5,12 +5,12 @@ module.exports = (userRepository, errors) => {
         register: register,
     };
 
-    function login(data) {
+    async function login(data) {
         return new Promise((resolve, reject) => {
             userRepository
                 .findOne({ where: { email: data.email }, attributes: ['id', 'password'] })
                 .then((user) => {
-                    if (user == null || user.password !== data.password) {
+                    if (user === null || user.password !== data.password) {
                         reject(errors.wrongCredentials);
                         return;
                     }
@@ -29,9 +29,9 @@ module.exports = (userRepository, errors) => {
             };
             userRepository.findOne({ where: { email: user.email }}).
             then((data)=>{
-                if(data==null) return userRepository.create(user);
+                if(data===null) return userRepository.create(user);
                 else return null;
-            }).then((data) => resolve({ success: (data!=null)?true:false }))
+            }).then((data) => resolve({ success: (data!==null) }))
                 .catch(reject);
         });
     }

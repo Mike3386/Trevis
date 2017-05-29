@@ -1,19 +1,16 @@
 'use strict';
-module.exports = (userService, promiseHandler) => {
+module.exports = (userService) => {
     const BaseController = require('./base_class');
 
     class UserController extends BaseController {
-        constructor(service, promiseHandler) {
-            super(service, promiseHandler);
-            this.routes[{path: '/', method: 'get'}]({callback: (req, res) => this.block(req, res)});
-
-
+        constructor(service) {
+            super(service);
         }
 
         pay(req, res) {
-            this.promiseHandler(res, this.service.pay(req.body));
+            //this.promiseHandler(res, this.service.pay(req.body));
         }
     }
 
-    return new UserController(userService, promiseHandler);
+    return new UserController(userService);
 };

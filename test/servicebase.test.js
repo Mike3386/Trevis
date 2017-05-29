@@ -1,5 +1,5 @@
 'use strict';
-let errors = require('../utils/errors');
+let errors = require('../utils/messages');
 let baseMock = require('../mocks/repositories/baseMock');
 let domainMock = require('../mocks/repositories/domainMock');
 let userMock = require('../mocks/repositories/userMock');

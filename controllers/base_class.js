@@ -1,54 +1,71 @@
 'use strict';
 const express = require('express');
-const errors = require('../utils/errors');
+const errors = require('../utils/messages');
 
 module.exports = class BaseController {
-    constructor(service, promiseHandler) {
+    constructor(service) {
+        this.routes = {};
 
-        this.routes = [];
-        this.routes[{path: '/', method: 'get'}]({callback: (req, res) => this.readAll(req, res)});
-
-
-        /*this.router.get('/', (req, res) => this.readAll(req, res));
-         this.router.post('/', (req, res) => this.create(req, res));
-         this.router.put('/', (req, res) => this.update(req, res));
-         this.router.get('/:id', (req, res) => this.read(req, res));
-         this.router.delete('/:id', (req, res) => this.del(req, res));*/
+        this.setRoute('/', 'get', this.readAll);
+        this.setRoute('/', 'post', this.create);
+        this.setRoute('/', 'put', this.update);
+        this.setRoute('/:id', 'get', this.read);
+        this.setRoute('/:id', 'delete', this.del);
 
         this.service = service;
-        this.promiseHandler = promiseHandler;
     }
 
-    get router() {
+    setRoute(path, method, callback) {
+        let key = JSON.stringify({path: path, method: method});
+        this.routes[key] = {callback: callback};
+    }
+
+    deleteRoute(path, method) {
+        this.routes.delete(JSON.stringify({path: path, method: method}));
+    }
+
+    getRouter() {
         let router = express.Router();
-        let keys = this.routes.keys();
-        for (let pm in keys)
-            if (keys.hasOwnProperty(pm))
-                router[pm.method](pm.path, keys[pm]);
+        let keys = Object.keys(this.routes);
+
+        for (let key in this.routes) {
+            if (this.routes.hasOwnProperty(key)) {
+                let currKey = JSON.parse(key);
+                router[currKey.method](currKey.path, this.routes[key].callback.bind(this));
+            }
+        }
+
         return router;
     }
 
-    readAll(req, res) {
-        this.promiseHandler(res, this.service.readChunk(req.params));
+    async readAll(req, res, next) {
+        try {
+            console.log(this.service.readChunk);
+            let data = await this.service.readChunk(req.params);
+            next(data);
+        } catch (err) {
+            next(err);
+        }
+
     }
 
-    read(req, res) {
-        this.promiseHandler(res, this.service.readById(req.params.id));
+    async read(req, res) {
+        let data = await this.service.readById(req.params.id);
     }
 
-    create(req, res) {
-        this.promiseHandler(res, this.service.create(req.body));
+    async create(req, res) {
+        let data = await this.service.create(req.body);
     }
 
-    update(req, res) {
-        this.promiseHandler(res, this.service.update(req.body));
+    async update(req, res) {
+        let data = await this.service.update(req.body);
     }
 
-    del(req, res) {
-        this.promiseHandler(res, this.service.delete(req.body.id));
+    async del(req, res) {
+        let data = await this.service.delete(req.body.id);
     }
 
-    block(req, res) {
+    async block(req, res) {
         res.status(403).json(errors.accessDenied);
     }
 };

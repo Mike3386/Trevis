@@ -1,5 +1,5 @@
 'use strict';
-let errors = require('../utils/errors');
+let errors = require('../utils/messages');
 let mock = require('../mocks/repositories/auth_sinon');
 let authService = require('../services/auth')(mock.repository, errors);
 

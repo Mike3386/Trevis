@@ -2,6 +2,7 @@
   "name": "sample",
   "version": "0.0.1",
   "dependencies": {
+    "bcrypt": "^1.0.2",
     "bluebird": "^3.4.7",
     "body-parser": "^1.15.2",
     "body-parser-xml": "^1.1.0",
@@ -9,6 +10,7 @@
     "easyxml": "^2.0.1",
     "express": "^4.14.0",
     "express-query-int": "^1.0.1",
+    "express-validator": "^3.2.0",
     "jest": "^19.0.2",
     "jsonwebtoken": "^7.3.0",
     "mock-require": "^2.0.2",

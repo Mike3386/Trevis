@@ -1,9 +1,9 @@
 'use strict';
+const messages = require('../utils/messages');
 
 module.exports = class BaseService {
-    constructor(repository, errors) {
+    constructor(repository) {
         this.repository = repository;
-        this.errors = errors;
 
         this.defaultConfig = {
             readChunk: {
@@ -35,10 +35,7 @@ module.exports = class BaseService {
     };
 
     async readById(id) {
-        id = parseInt(id);
-        let post = await this.repository.findById(id, {raw: true});
-        if (post === null) throw this.errors.notFound;
-        return post;
+        return await this.repository.findById(id, {raw: true});
     };
 
     async baseCreate(data) {

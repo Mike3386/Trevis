@@ -1,7 +1,7 @@
 'use strict';
 const SequelizeMock = require('sequelize-mock');
 let dbMock = new SequelizeMock();
-let errors = require('../utils/errors');
+let errors = require('../utils/messages');
 let mock = require('../mocks/repositories/base')(dbMock);
 let bs = require('../services/base');
 let baseService = new bs(mock, errors);

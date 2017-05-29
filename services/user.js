@@ -1,34 +1,28 @@
 'use strict';
-module.exports = (userRepository, roleRepository, errors) => {
+module.exports = (userRepository, roleRepository) => {
     const BaseService = require('./base');
 
     class UserService extends BaseService {
-        constructor(userRepository, errors) {
-            super(userRepository, errors);
+        constructor(userRepository) {
+            super(userRepository);
+            this.defaultUser = {
+                roleId: 1
+            }
         }
 
-        pay(data) {
-            return new Promise((resolve, reject) => {
-                let user = {
-                    cache: data.cache
-                };
-
-                self.baseUpdate(data.id, user)
-                    .then(resolve).catch(reject);
-            })
-        }
-
-        update(data) {
-            return new Promise((resolve, reject) => {
+        async baseUpdate(data) {
                 let user = {
                     password: data.password,
                     firstname: data.firstname,
                     lastname: data.lastname
                 };
 
-                self.baseUpdate(data.id, user)
-                    .then(resolve).catch(reject);
-            });
+                return await super.baseUpdate(data.id, user);
+        }
+
+        async baseCreate(user){
+            user = Object.assign({}, this.defaultUser, user);
+            super.baseCreate(user);
         }
     }
 

@@ -9,7 +9,7 @@ const queryInt = require('express-query-int');
 const serializer = new EasyXml(config.easyXml);
 require('body-parser-xml')(bodyParser);
 
-const errors = require('./utils/errors');
+const errors = require('./utils/messages');
 const dbcontext = require('./context/db')(Sequelize, config);
 
 const userService = require('./services/user')(dbcontext.user, errors);
