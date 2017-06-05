@@ -7,7 +7,7 @@
   },
   "env": "dev",
   "cookie": {
-    "key": "super puper secret key",
+    "key": "secret",
     "auth": "__user_id"
   },
   "easyXml" : {
@@ -27,6 +27,9 @@
     }
   },
   "bcrypt":{
-    "salt":"mysecretsaltishere"
+    "salt":10
+  },
+  "jwt":{
+    "key":"fpkhgi;ohaw"
   }
 }

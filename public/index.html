@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Main</title>
+    <title>Login</title>
 </head>
 <body>
-    <form>
-        <label>Email</label><input type="text" id="email" name="email">
+    <form action="/api/session" method="post">
+        <label>E-mail</label><input type="text" id="email" name="email">
         <br />
         <label>Password</label><input type="password" id="password" name="password">
         <br />
         <input type="submit" value="Login" />
     </form>
+    <br />
+    <a href="register.html">To register</a>
 </body>
 </html>

@@ -22,16 +22,17 @@ module.exports = (userRepository) => {
         return user.id;
     }
 
-    async function register(data) {
-        let data = await userRepository.findOne({where: {email: data.email}});
+    async function register(params) {
+        let data = await userRepository.findOne({where: {email: params.email}});
         if (data === null) {
-            data.password = await bcrypt.hashAsync(data.password, config.bcrypt.salt);
+            let salt = bcrypt.genSaltSync(config.bcrypt.salt);
+            params.password = await bcrypt.hashAsync(params.password, salt);
 
             let user = {
-                email: data.email,
-                password: data.password,
-                firstname: data.firstname,
-                lastname: data.lastname
+                email: params.email,
+                password: params.password,
+                firstname: params.firstname,
+                lastname: params.lastname
             };
 
             await userRepository.create(user);

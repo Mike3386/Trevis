@@ -1,25 +1,31 @@
 const roles = {
-  GUEST: 0,
-  USER: 1,
-  ADMIN: 4
+    GUEST: 0,
+    USER: 1,
+    ADMIN: 4
 };
 
 const getRoleLevel = (role) => {
-  let level;
-  switch(role){
-      case 'guest':
-        level = roles.GUEST;
-        break;
-      case 'user':
-          level = roles.USER;
-          break;
-      case 'admin':
-          level = roles.ADMIN;
-          break;
-      default:
-        level = roles.GUEST;
-  }
-  return level;
+    let level;
+    switch (role) {
+        case 'guest':
+            level = roles.GUEST;
+            break;
+        case 'user':
+            level = roles.USER;
+            break;
+        case 'admin':
+            level = roles.ADMIN;
+            break;
+        default:
+            level = roles.GUEST;
+    }
+    return level;
+};
+
+const getLowestLevelForUrl = (url) => {
+    let arr = urls.filter((elem) => new RegExp(elem.pattern).test(url));
+    if (arr.length === 0) return roles.GUEST;
+    else if (arr.length === 1) return arr[0].level;
 };
 
 const urls = [
@@ -34,7 +40,8 @@ const urls = [
 ];
 
 module.exports = {
-  roles,
-  urls,
-  getRoleLevel
+    roles,
+    urls,
+    getRoleLevel,
+    getLowestLevelForUrl
 };

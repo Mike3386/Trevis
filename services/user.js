@@ -26,5 +26,5 @@ module.exports = (userRepository, roleRepository) => {
         }
     }
 
-    return new UserService(userRepository, roleRepository, errors);
+    return new UserService(userRepository, roleRepository);
 };

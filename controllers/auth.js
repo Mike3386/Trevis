@@ -3,47 +3,43 @@ const express = require('express');
 const EasyXml = require('easyxml');
 const jwt = require('jsonwebtoken');
 const config = require('../config.json');
+const messages = require('../utils/messages');
 
 const serializer = new EasyXml(config.easyXml);
 
-module.exports = (authService, config) => {
-    const router = express.Router();
+module.exports = (authService) => {
 
-    router.post('/', (req, res) => {
-        authService.login(req.body)
-            .then((userId) => {
-                let token = jwt.sign({ __user_id: userId }, 'shhhhh');
-                res.cookie('x-access-token', token);
-                //res.json({ success: true });
-                SendByHandle({success: true, token:token}, req, res);
-            })
-            .catch((err) => res.error(err));
-    });
+    const baseController = require('./base_class');
 
-    router.put('/', (req, res) => {
-        authService.register(req.body)
-            .then((user) =>  SendByHandle(user, req, res))
-            .catch((err) => res.error(err));
-    });
+    class authController extends baseController{
+        constructor(service){
+            super(service);
 
-    router.get('/logout', (req, res) => {
-        res.cookie(config.cookie.auth, '');
-        res.json({ success: true });
-    });
+            this.setRoute('/', 'post', this.login);
+            this.setRoute('/', 'put', this.register);
+            this.setRoute('/', 'delete', this.logout);
+        }
 
-    return router;
-};
+        async login(req, res, next){
+                let userId = await authService.login(req.body);
+                if(userId!==undefined && userId!==null){
+                    let token = jwt.sign({ __user_id: userId }, config.jwt.key);
+                    res.cookie(config.cookie.key, token);
+                    next(messages.success);
+                }else
+                    next(messages.badRequest);
+        }
 
-function SendByHandle(data, req, res){
-    let contentType = req.headers['content-type'];
-    if (contentType === 'application/json') {
-        res.header('Content-Type', 'application/json');
-        res.send(data);
-    } else if (contentType === 'application/xml') {
-        res.header('Content-Type', 'text/xml');
-        let xml = serializer.render(data.dataValues || data);
-        res.send(xml);
-    } else {
-        res.send(data);
+        async register(req, res, next){
+            let ans = (await authService.register(req.body))?messages.success:messages.AnswerError("Not register");
+            next(ans);
+        }
+
+        async logout(req, res, next) {
+            res.cookie(config.cookie.auth, '');
+            next(messages.success);
+        }
     }
-}
+
+    return new authController(authService);
+};

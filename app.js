@@ -14,10 +14,10 @@ const dbcontext = require('./context/db')(Sequelize, config);
 const userService = require('./services/user')(dbcontext.user);
 const authService = require('./services/auth')(dbcontext.user);
 
-const apiController = require('./controllers/api')(userService, authService, config);
+const apiController = require('./controllers/api')(userService, authService);
 
 const logger = require('./utils/logger');
-const auth = require('./utils/auth')(dbcontext.user, dbcontext.role, authService, config);
+const auth = require('./utils/auth')(dbcontext.user, dbcontext.role, authService);
 const out = require('./utils/out')(serializer);
 const bodyParams = require('./utils/bodyParams')();
 

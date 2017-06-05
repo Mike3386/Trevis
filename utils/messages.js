@@ -17,7 +17,7 @@ function Answer(text, status) {
     return {
         message: {
             text: text,
-            code: text.replace(/\s+/g, '-').toLowerCase()
+            code: text.replace(/\s+/g, '_').toLowerCase()
         },
         status: status
     }
@@ -34,9 +34,10 @@ function AnswerError(error) {
 }
 
 module.exports = {
+    AnswerError,
     success: Answer('Success', 200),
     lowUserRole: Answer('Low user role', 403),
-    invalidId: Answer('Bad request', 400),
+    badRequest: Answer('Bad request', 400),
     notFound: Answer('Entity not found', 404),
     wrongCredentials: Answer('Email or password are wrong', 404),
     accessDenied: Answer('Access denied', 403),

@@ -1,20 +1,35 @@
 'use strict';
 const privilages = require('../utils/privilages');
+const messages = require('../utils/messages');
+const jwt = require('jsonwebtoken');
+const config = require('../config.json');
 
-module.exports = (userRepository, roleRepository, authService, config, errors) => {
+module.exports = (userRepository, roleRepository, authService) => {
     return async (req, res, next) => {
-        let userId = req.signedCookies[config.cookie.auth];
+        let decoded;
+        let level;
+        let userId;
+        if(req.signedCookies[config.cookie.key])
+            userId = req.signedCookies[config.cookie.key];
+
+        try{
+            decoded = jwt.verify(userId, config.jwt.key);
+        }
+        catch(e){}
+
+        if(decoded!==null && decoded!==undefined) userId = decoded.userId;
         let path = req.url;
-        /*if(userId)
+
+        if(userId!==null && userId!==undefined)
         {
             let user = await userRepository.findOne({where:{id:userId}});
             let role = await roleRepository.findOne({where:{id:user.dataValues.roleId}});
-            let level = privilages.getRoleLevel(role.dataValues.name);
-            if(level>=privilages.roles.GUEST) next();
-            else next(errors.lowUserRole);
+            level = privilages.getRoleLevel(role.dataValues.name);
         }
-        else next(errors.lowUserRole);*/
-        next();
+        else level = privilages.roles.GUEST;
+
+        if(level>=privilages.getLowestLevelForUrl(req.url)) next();
+        else next(messages.lowUserRole);
 
         return 0;
     };
