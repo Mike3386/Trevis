@@ -1,9 +1,24 @@
 {
-  "db": {
-    "host": "127.0.0.1",
+  "dbMysql": {
+    "options":{
+      "host": "127.0.0.1",
+      "dialect": "mysql",
+      "dialectOptions": { "ssl": false }
+    },
     "name": "cp",
     "user": "root",
     "password": "123456"
+  },
+  "dbPostgres": {
+    "options":{
+      "host": "ec2-54-246-108-119.eu-west-1.compute.amazonaws.com",
+      "dialect": "postgres",
+      "port": 5432,
+      "dialectOptions": { "ssl": true }
+    },
+    "name": "dfrj44c7ap3drk",
+    "user": "swclcoeuliqwqj",
+    "password": "c4505257a4b390fcb3b2c6e99b5a44e0b0be97fb2bcfb4d9fa75dadd422af8cd"
   },
   "env": "dev",
   "cookie": {

@@ -21,7 +21,11 @@
     "xml": "^1.0.1"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "npm index.js"
+  },
+  "engines": {
+    "node": "^7.0.0"
   },
   "devDependencies": {
     "sequelize-mock": "^0.7.0",

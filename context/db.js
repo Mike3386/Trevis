@@ -1,7 +1,8 @@
 module.exports = (Sequelize, config) => {
     const options = {
-        host: config.db.host,
-        dialect: 'mysql',
+        host: config.options.host,
+        dialect: config.options.dialect,
+        dialectOptions: config.options.dialectOptions,
         logging: false,
         define: {
             timestamps: true,
@@ -14,7 +15,7 @@ module.exports = (Sequelize, config) => {
         }
     };
 
-    const sequelize = new Sequelize(config.db.name, config.db.user, config.db.password, options);
+    const sequelize = new Sequelize(config.name, config.user, config.password, options);
 
     const User = require('../models/user')(Sequelize, sequelize);
     const Role = require('../models/role')(Sequelize, sequelize);
