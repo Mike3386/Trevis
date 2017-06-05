@@ -9,7 +9,7 @@ const queryInt = require('express-query-int');
 const serializer = new EasyXml(config.easyXml);
 require('body-parser-xml')(bodyParser);
 
-const dbcontext = require('./context/db')(Sequelize, (process.env.Dev)?config.dbPostgres:config.dbMysql);
+const dbcontext = require('./context/db')(Sequelize, (process.env.DEV)?config.dbPostgres:config.dbMysql);
 
 const userService = require('./services/user')(dbcontext.user);
 const authService = require('./services/auth')(dbcontext.user);
