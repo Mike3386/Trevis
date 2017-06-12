@@ -25,7 +25,7 @@ const getRoleLevel = (role) => {
 const getLowestLevelForUrl = (url) => {
     let arr = urls.filter((elem) => new RegExp(elem.pattern).test(url));
     if (arr.length === 0) return roles.GUEST;
-    else if (arr.length === 1) return arr[0].level;
+    else return arr[0].level;
 };
 
 const urls = [
@@ -34,7 +34,11 @@ const urls = [
         level: roles.GUEST
     },
     {
-        pattern: '^\/api\/$',
+        pattern: '^\/api\/session$',
+        level: roles.GUEST
+    },
+    {
+        pattern: '^\/api\/',
         level: roles.USER
     }
 ];

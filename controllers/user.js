@@ -1,5 +1,6 @@
 'use strict';
-module.exports = (userService) => {
+const util = require('util');
+module.exports = (userService, groupService) => {
     const BaseController = require('./base_class');
 
     class UserController extends BaseController {
@@ -7,8 +8,19 @@ module.exports = (userService) => {
             super(service);
         }
 
-        pay(req, res) {
-            //this.promiseHandler(res, this.service.pay(req.body));
+        async reada(req, res) {
+            req.checkParams('id', 'Id required and must be number').notEmpty().isNumeric();
+
+            let result = await req.getValidationResult();
+            if (!result.isEmpty()) {
+                res.status(400).send('Errors: ' + util.inspect(result.array()));
+                return;
+            }
+
+            let data = await this.service.readById(req.userId);
+
+
+            res.render('../views/main', {user:data});
         }
     }
 

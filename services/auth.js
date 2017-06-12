@@ -15,9 +15,7 @@ module.exports = (userRepository) => {
     async function login(data) {
         let user = await userRepository.findOne({where: {email: data.email}, attributes: ['id', 'password']});
 
-        if (user === null || !(await bcrypt.compareAsync(data.password, user.password))) {
-            return;
-        }
+        if (user === null || !(await bcrypt.compareAsync(data.password, user.password))) return;
 
         return user.id;
     }

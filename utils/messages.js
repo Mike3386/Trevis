@@ -45,4 +45,5 @@ module.exports = {
     PaymentRequired: Answer('Payment Required', 402),
     PaymentDomainUse: Answer('domain already use', 500),
     CreateDomainExists: Answer('domain already exists', 500),
+    AlreadyExists: Answer('already exists', 400)
 };

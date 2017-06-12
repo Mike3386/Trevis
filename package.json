@@ -10,7 +10,9 @@
     "easyxml": "^2.0.1",
     "express": "^4.14.0",
     "express-query-int": "^1.0.1",
+    "express-session": "^1.15.3",
     "express-validator": "^3.2.0",
+    "jade": "^1.11.0",
     "jest": "^19.0.2",
     "jsonwebtoken": "^7.3.0",
     "mock-require": "^2.0.2",
@@ -19,6 +21,7 @@
     "pg": "^6.2.3",
     "randomstring": "^1.1.5",
     "sequelize": "^3.24.1",
+    "ws": "^3.0.0",
     "xml": "^1.0.1"
   },
   "scripts": {

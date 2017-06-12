@@ -49,4 +49,4 @@ module.exports = class BaseService {
     async baseDelete(id) {
         return this.repository.destroy({where: {id: id}});
     };
-}
+};

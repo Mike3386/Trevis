@@ -1,4 +1,5 @@
 'use strict';
+const util = require('util');
 const express = require('express');
 const EasyXml = require('easyxml');
 const jwt = require('jsonwebtoken');
@@ -11,33 +12,59 @@ module.exports = (authService) => {
 
     const baseController = require('./base_class');
 
-    class authController extends baseController{
-        constructor(service){
+    class authController extends baseController {
+        constructor(service) {
             super(service);
 
             this.setRoute('/', 'post', this.login);
             this.setRoute('/', 'put', this.register);
+            this.setRoute('/', 'get', this.block);
             this.setRoute('/', 'delete', this.logout);
         }
 
-        async login(req, res, next){
-                let userId = await authService.login(req.body);
-                if(userId!==undefined && userId!==null){
-                    let token = jwt.sign({ __user_id: userId }, config.jwt.key);
-                    res.cookie(config.cookie.key, token);
-                    next(messages.success);
-                }else
-                    next(messages.badRequest);
+        async login(req, res, next) {
+            req.checkBody('email', 'E-mail required').notEmpty().isEmail();
+            req.checkBody('password', 'Password required').notEmpty();
+
+            let result = await req.getValidationResult();
+            if (!result.isEmpty()) {
+                res.status(400).send('Errors: ' + util.inspect(result.array()));
+                return;
+            }
+
+            let userId = await authService.login(req.body);
+            if (userId !== undefined && userId !== null) {
+                let token = jwt.sign({__user_id: userId}, config.jwt.key);
+                res.cookie(config.cookie.key, token);
+                res.redirect('/api/users/' + req.userId);
+                //next(messages.success);
+            } else next(messages.badRequest);
+            return;
         }
 
-        async register(req, res, next){
-            let ans = (await authService.register(req.body))?messages.success:messages.AnswerError("Not register");
-            next(ans);
+        async register(req, res, next) {
+            req.checkBody('firstname', 'E-mail required').notEmpty();
+            req.checkBody('secondname', 'E-mail required').notEmpty();
+            req.checkBody('email', 'E-mail required').notEmpty().isEmail();
+            req.checkBody('password', 'Password required').notEmpty();
+
+            let result = await req.getValidationResult();
+            if (!result.isEmpty()) {
+                res.status(400).send('Errors: ' + util.inspect(result.array()));
+                return;
+            }
+
+            if(!await authService.register(req.body))
+                next(messages.wrongCredentials);
+            else res.redirect('/index.html');
+            return;
         }
 
         async logout(req, res, next) {
+            console.log('aa');
             res.cookie(config.cookie.auth, '');
             next(messages.success);
+            return;
         }
     }
 

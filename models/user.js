@@ -10,6 +10,7 @@ module.exports = (Sequelize, sequelize) => {
         email: Sequelize.STRING,
         password: Sequelize.STRING,
         firstname: Sequelize.STRING,
-        lastname: Sequelize.STRING
+        lastname: Sequelize.STRING,
+        //imageUrl: Sequelize.STRING
     });
 };

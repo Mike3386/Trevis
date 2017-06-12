@@ -7,7 +7,7 @@ module.exports = (serializer, errors) => {
         let status = obj.status || 200;
         switch(contentType){
             case 'application/json':
-                res.status(status).json(obj.message);
+                res.status(status).json(obj.message||obj);
             break;
             case 'application/xml':
                 res.header('Content-Type', 'text/xml');

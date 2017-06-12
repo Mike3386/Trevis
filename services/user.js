@@ -11,18 +11,18 @@ module.exports = (userRepository, roleRepository) => {
         }
 
         async baseUpdate(data) {
-                let user = {
-                    password: data.password,
-                    firstname: data.firstname,
-                    lastname: data.lastname
-                };
+            let user = {
+                password: data.password,
+                firstname: data.firstname,
+                lastname: data.lastname
+            };
 
-                return await super.baseUpdate(data.id, user);
+            return await super.baseUpdate(data.id, user);
         }
 
         async baseCreate(user){
             user = Object.assign({}, this.defaultUser, user);
-            super.baseCreate(user);
+            await super.baseCreate(user);
         }
     }
 

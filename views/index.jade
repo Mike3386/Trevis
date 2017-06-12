@@ -1,0 +1,14 @@
+html
+    head
+        meta(charset="UTF-8")
+        title Login
+    body
+        form(action="/api/session" method="post")
+            label E-mail
+            input(type="text" id="email" name="email")
+            br
+            label Password
+            input(type="password" id="password" name="password")
+            input(type="submit" value="Login")
+        br
+        a(href="register.html") To register

@@ -9,15 +9,15 @@ module.exports = (userRepository, roleRepository, authService) => {
         let decoded;
         let level;
         let userId;
-        if(req.signedCookies[config.cookie.key])
-            userId = req.signedCookies[config.cookie.key];
+        if(req.cookies[config.cookie.key])
+            userId = req.cookies[config.cookie.key];
 
         try{
             decoded = jwt.verify(userId, config.jwt.key);
         }
         catch(e){}
 
-        if(decoded!==null && decoded!==undefined) userId = decoded.userId;
+        if(decoded!==null && decoded!==undefined) userId = decoded.__user_id;
         let path = req.url;
 
         if(userId!==null && userId!==undefined)
@@ -27,6 +27,8 @@ module.exports = (userRepository, roleRepository, authService) => {
             level = privilages.getRoleLevel(role.dataValues.name);
         }
         else level = privilages.roles.GUEST;
+
+        if(userId)req.userId = userId;
 
         if(level>=privilages.getLowestLevelForUrl(req.url)) next();
         else next(messages.lowUserRole);

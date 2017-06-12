@@ -1,0 +1,21 @@
+html
+    head
+        meta(charset="UTF-8")
+        script(src="js/jquery.min.js")
+        script(src="js/register.js")
+        title Register
+    body
+        form(id="registerForm")
+            label Name
+            input(type="text" name="firstname")
+            br
+            label Second Name
+            input(type="password" name="secondname")
+            br
+            label E-mail
+            input(type="text" name="email")
+            br
+            label Password
+            input(type="password" id="password" name="password")
+            input(onclick="register()" type="button" value="Register")
+        a(href='/index') To main
