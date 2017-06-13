@@ -30,7 +30,8 @@ module.exports = (userRepository) => {
                 email: params.email,
                 password: params.password,
                 firstname: params.firstname,
-                lastname: params.lastname
+                lastname: params.lastname,
+                roleId: params.roleId
             };
 
             await userRepository.create(user);
