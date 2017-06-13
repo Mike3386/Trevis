@@ -22,7 +22,7 @@ module.exports = (userRepository, roleRepository) => {
 
         async baseCreate(user){
             user = Object.assign({}, this.defaultUser, user);
-            await super.baseCreate(user);
+            return await super.baseCreate(user);
         }
     }
 

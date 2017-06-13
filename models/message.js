@@ -7,6 +7,10 @@ module.exports = (Sequelize, sequelize) => {
             autoIncrement: true
         },
 
-        text: Sequelize.STRING
+        text: Sequelize.STRING,
+        status: {
+            type: Sequelize.STRING,
+            defaultValue: 'sended'
+        }
     });
 };

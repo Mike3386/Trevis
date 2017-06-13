@@ -10,7 +10,7 @@ module.exports = (groupRepository, relRepository) => {
 
         async baseCreate(group){
             group = Object.assign({}, this.defaultUser, group);
-            await super.baseCreate(group);
+            return await super.baseCreate(group);
         }
     }
 

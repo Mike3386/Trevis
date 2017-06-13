@@ -9,7 +9,7 @@ bluebird.promisifyAll(bcrypt);
 module.exports = (userRepository) => {
     return {
         login: login,
-        register: register,
+        register: register
     };
 
     async function login(data) {

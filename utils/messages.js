@@ -23,6 +23,16 @@ function Answer(text, status) {
     }
 }
 
+function AnswerFull(text, code, status) {
+    return {
+        message: {
+            text: text,
+            code: code
+        },
+        status: status
+    }
+}
+
 function AnswerError(error) {
     return {
         message: {
@@ -31,6 +41,14 @@ function AnswerError(error) {
         },
         status: 500
     }
+}
+
+function InvalidParams(params) {
+    let text = "";
+    for(let i = 0; i<params.length; i++){
+        text+="Invalid param " + params[i] + ";"
+    }
+    return AnswerFull(text, 'invalid_args', 400);
 }
 
 module.exports = {
@@ -45,5 +63,7 @@ module.exports = {
     PaymentRequired: Answer('Payment Required', 402),
     PaymentDomainUse: Answer('domain already use', 500),
     CreateDomainExists: Answer('domain already exists', 500),
-    AlreadyExists: Answer('already exists', 400)
+    AlreadyExists: Answer('already exists', 400),
+    InvalidParams,
+    Answer
 };

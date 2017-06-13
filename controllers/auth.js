@@ -36,16 +36,15 @@ module.exports = (authService) => {
             if (userId !== undefined && userId !== null) {
                 let token = jwt.sign({__user_id: userId}, config.jwt.key);
                 res.cookie(config.cookie.key, token);
-                res.redirect('/api/users/' + req.userId);
-                //next(messages.success);
+                res.redirect('/main');
             } else next(messages.badRequest);
             return;
         }
 
         async register(req, res, next) {
-            req.checkBody('firstname', 'E-mail required').notEmpty();
-            req.checkBody('secondname', 'E-mail required').notEmpty();
-            req.checkBody('email', 'E-mail required').notEmpty().isEmail();
+            req.checkBody('firstname', 'firstname required').notEmpty();
+            req.checkBody('lastname', 'lastname required').notEmpty();
+            req.checkBody('email', 'email required').notEmpty().isEmail();
             req.checkBody('password', 'Password required').notEmpty();
 
             let result = await req.getValidationResult();
@@ -56,13 +55,12 @@ module.exports = (authService) => {
 
             if(!await authService.register(req.body))
                 next(messages.wrongCredentials);
-            else res.redirect('/index.html');
+            else res.redirect('/index');
             return;
         }
 
         async logout(req, res, next) {
-            console.log('aa');
-            res.cookie(config.cookie.auth, '');
+            res.cookie(config.cookie.key, '');
             next(messages.success);
             return;
         }

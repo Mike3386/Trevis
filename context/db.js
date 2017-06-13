@@ -27,7 +27,7 @@ module.exports = (Sequelize, config) => {
     Role.hasMany(User);
     Message.belongsTo(User, {foreignKey:'senderId'});
     Message.belongsTo(User, {foreignKey:'receiverIdUser'});
-    Message.belongsTo(User, {foreignKey:'receiverIdGroup'});
+    Message.belongsTo(Group, {foreignKey:'receiverIdGroup'});
 
     Participants.belongsTo(Group, {foreignKey:'groupId'});
     Participants.belongsTo(User, {foreignKey:'userId'});

@@ -21,6 +21,7 @@ module.exports = class BaseService {
         let offset = (options.page - 1) * options.limit;
 
         let result = await this.repository.findAndCountAll({
+            where: options.where,
             limit: limit,
             offset: offset,
             order: [[options.orderField, options.order.toUpperCase()]],
@@ -29,8 +30,7 @@ module.exports = class BaseService {
 
         return {
             'data': result.rows,
-            'recordsTotal': result.count,
-            'recordsFiltered': result.rows.length
+            'recordsTotal': result.count
         };
     };
 
@@ -49,4 +49,14 @@ module.exports = class BaseService {
     async baseDelete(id) {
         return this.repository.destroy({where: {id: id}});
     };
+
+    async isExist(id) {
+        try{
+            let data = await this.repository.find({where:{id:id}})
+            return data != null;
+        }catch(err){
+            return false;
+        }
+
+    }
 };

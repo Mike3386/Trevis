@@ -6,15 +6,13 @@ module.exports = (userService, authService, messageService, groupService, relSer
 
     const userController = require('./user')(userService);
     const authController = require('./auth')(authService);
-    const messageController = require('./message')(messageService);
-    const groupController = require('./group')(groupService);
-    const relController = require('./rel')(relService);
+    const messageController = require('./message')(messageService, userService, relService, groupService);
+    const groupController = require('./group')(groupService, relService);
 
     router.use('/users', userController.getRouter());
-    router.use('/session', authController.getRouter());
-    router.use('/message', messageController.getRouter());
-    router.use('/group', groupController.getRouter());
-    router.use('/rel', relController.getRouter());
+    router.use('/sessions', authController.getRouter());
+    router.use('/messages', messageController.getRouter());
+    router.use('/groups', groupController.getRouter());
 
     return router;
 };

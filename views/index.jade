@@ -3,7 +3,7 @@ html
         meta(charset="UTF-8")
         title Login
     body
-        form(action="/api/session" method="post")
+        form(action="/api/sessions" method="post")
             label E-mail
             input(type="text" id="email" name="email")
             br
@@ -11,4 +11,4 @@ html
             input(type="password" id="password" name="password")
             input(type="submit" value="Login")
         br
-        a(href="register.html") To register
+        a(href="register") To register

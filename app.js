@@ -25,7 +25,7 @@ const logger = require('./utils/logger');
 const auth = require('./utils/auth')(dbcontext.user, dbcontext.role, authService);
 const out = require('./utils/out')(serializer);
 const bodyParams = require('./utils/bodyParams')();
-const jade = require('./utils/jade')();
+const jade = require('./utils/jade')(userService);
 
 module.exports = async () => {
     const app = express();

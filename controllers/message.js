@@ -1,61 +1,127 @@
 'use strict';
 const util = require('util');
 const message = require('../utils/messages');
-module.exports = (userService) => {
+module.exports = (messageService, userService, relService, groupService) => {
     const BaseController = require('./base_class');
 
     class MessageController extends BaseController {
-        constructor(service) {
-            super(service);
-
-            this.setRoute('/', 'get', this.read);
-            this.setRoute('/', 'post', this.create);
-            this.setRoute('/:id', 'put', this.block);
+        constructor(serviceM, serviceU, serviceR, groupService) {
+            super(serviceM);
+            this.userService = serviceU;
+            this.relService = serviceR;
+            this.groupService = groupService;
+            this.routes = {};
+            this.setRoute('/users/:id', 'get', this.readUsers);
+            this.setRoute('/groups/:id', 'get', this.readGroups);
+            this.setRoute('/users/:id', 'post', this.createUsers);
+            this.setRoute('/groups/:id', 'post', this.createGroup);
         }
 
-        async read(req, res, next){
-            req.checkQuery('type', 'type required and must be number').notEmpty();
+        async readUsers(req, res, next){
+            if(req.params.id == null || !await this.userService.isExist(req.params.id)) {
+                next(message.InvalidParams(['id']));
+                return;
+            }
             let data;
-            if(req.query.type === 'user')
-                data = await this.service.repository.find(
-                    {
-                        where:{receiverIdUser:req.userId},
-                        limit:req.query.limit,
-                        offset: req.query.offset
-                    }
-                );
-            else
-                data = await this.service.repository.find(
-                    {
-                        where:{receiverIdGroup:req.query.receiverIdGroup},
-                        limit:req.query.limit,
-                        offset: req.query.offset
-                    }
+            this.service.setReadedUser(req.query.limit||10, req.query.page||1, req.params.id, req.userId);
+            data = await this.service.readChunk(
+                {
+                    where:{
+                        $or:[
+                            {
+                                $and:{
+                                    receiverIdUser: req.userId,
+                                    senderId: req.params.id
+                                }
+                            },
+                            {
+                                $and:{
+                                    receiverIdUser: req.params.id,
+                                    senderId: req.userId
+                                }
+                            }
+                        ]
+                    },
+                    limit:req.query.limit||10,
+                    page: req.query.page||1
+                }
+            );
 
-                );
-
-            next(data.dataValues);
+            next(data);
         }
 
-        async create(req, res, next) {
-            req.checkBody('text', 'Text required').notEmpty();
+        async readGroups(req, res, next){
+            if(req.params.id == null || !await this.groupService.isExist(req.params.id)) {
+                next(message.InvalidParams(['id']));
+                return;
+            }
+            let data;
+            this.service.setReadedGroup(req.query.limit||10, req.query.page||1, req.userId, req.params.id);
+            data = await this.service.readChunk(
+                {
+                    where:{
+                        $or:[
+                            {
+                                receiverIdGroup: req.userId
+                            },
+                            {
+                                receiverIdGroup: req.params.id
+                            }
+                        ]
+                    },
+                    limit:req.query.limit||10,
+                    page: req.query.page||1
+                }
+            );
 
-            let result = await req.getValidationResult();
-            if (!result.isEmpty()) {
-                res.status(400).send('Errors: ' + util.inspect(result.array()));
+            next(data);
+        }
+
+        async createUsers(req, res, next) {
+            if(req.params.id == null || !await this.userService.isExist(req.params.id)) {
+                next(message.InvalidParams(['id']));
+                return;
+            }
+
+            if(req.body.text == null) {
+                next(message.InvalidParams(['text']));
                 return;
             }
 
             req.body = {
                 text: req.body.text,
                 senderId: req.userId,
-                receiverIdUser: req.body.recieverIdUser,
-                receiverIdGroup: req.body.receiverIdGroup
+                receiverIdUser: req.params.id
+            };
+            let data = await this.service.baseCreate(req.body);
+            next(message.success);
+        }
+
+        async createGroup(req, res, next) {
+            if(req.params.id == null || !await this.groupService.isExist(req.params.id)) {
+                next(message.InvalidParams(['id']));
+                return;
+            }
+
+            if(req.body.text == null) {
+                next(message.InvalidParams(['text']));
+                return;
+            }
+
+            if((await this.relService.readChunk({where:{$and:[{userId:req.userId}, {groupId:req.params.id}]}})).data.length===0){
+                next(message.InvalidParams(['id']));
+                return;
+            }
+
+            req.body = {
+                text: req.body.text,
+                senderId: req.userId,
+                receiverIdGroup: req.params.id
             };
             let data = await this.service.baseCreate(req.body);
             next(message.success);
         }
     }
 
-    return new MessageController(userService);
+    return new MessageController(messageService, userService, relService, groupService);
 };

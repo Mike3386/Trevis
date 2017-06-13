@@ -1,7 +1,8 @@
 'use strict';
 const express = require('express');
-const errors = require('../utils/messages');
+const message = require('../utils/messages');
 const util = require('util');
+
 module.exports = class BaseController {
     constructor(service) {
         this.routes = {};
@@ -21,7 +22,7 @@ module.exports = class BaseController {
     }
 
     deleteRoute(path, method) {
-        this.routes.delete(JSON.stringify({path: path, method: method}));
+        delete this.routes[JSON.stringify({path: path, method: method})];
     }
 
     getRouter() {
@@ -29,12 +30,12 @@ module.exports = class BaseController {
         let keys = Object.keys(this.routes);
 
         for (let key in this.routes) {
-            if (this.routes.hasOwnProperty(key)) {
-                let currKey = JSON.parse(key);
-                router[currKey.method](currKey.path, this.routes[key].callback.bind(this));
-            }
+            if (this.routes.hasOwnProperty(key))
+                if(this.routes[key].callback){
+                    let currKey = JSON.parse(key);
+                    router[currKey.method](currKey.path, this.routes[key].callback.bind(this));
+                }
         }
-
         return router;
     }
 
@@ -56,8 +57,11 @@ module.exports = class BaseController {
             return;
         }
 
-        let data = await this.service.readById(req.params.id);
-        next(data);
+        if(req.params.id == null || !await this.service.isExist(req.params.id))next(message.InvalidParams(['id']));
+        else {
+            let data = await this.service.readById(req.params.id);
+            next(data);
+        }
     }
 
     async create(req, res, next) {
@@ -66,8 +70,11 @@ module.exports = class BaseController {
     }
 
     async update(req, res, next) {
-        let data = await this.service.baseUpdate(req.params.id, req.body);
-        next(data);
+        if(req.params.id == null || !await this.service.isExist(req.params.id))next(message.InvalidParams(['id']));
+        else {
+            let data = await this.service.baseUpdate(req.params.id, req.body);
+            next(data);
+        }
     }
 
     async del(req, res, next) {
@@ -79,8 +86,11 @@ module.exports = class BaseController {
             return;
         }
 
-        let data = await this.service.baseDelete(req.body.id);
-        next(data);
+        if(req.params.id == null || !await this.service.isExist(req.params.id))next(message.InvalidParams(['id']));
+        else {
+            let data = await this.service.baseDelete(req.params.id);
+            next(data);
+        }
     }
 
     async block(req, res) {
