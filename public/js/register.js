@@ -1,7 +1,7 @@
 function register() {
     var params = $('#registerForm').serialize();
     $.ajax({
-        url: '/api/session',
+        url: '/api/sessions',
         type: 'PUT',
         data: params,
         success: function(data) {
