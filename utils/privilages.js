@@ -38,6 +38,10 @@ const urls = [
         level: roles.GUEST
     },
     {
+        pattern: '^\/js\/',
+        level: roles.GUEST
+    },
+    {
         pattern: '^\/register$',
         level: roles.GUEST
     },
