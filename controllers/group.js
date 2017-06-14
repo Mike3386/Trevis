@@ -109,5 +109,6 @@ module.exports = (groupService, relService) => {
         }
     }
 
+
     return new GroupController(groupService, relService);
 };
