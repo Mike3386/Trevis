@@ -8,7 +8,7 @@ let domainRepMock = new domainMock();
 let userRepMock = new userMock();
 let base = require('../services/base');
 let baseService = new (require('../services/base'))(baseRepMock, errors);
-let domainService = require('../services/domain')(domainRepMock, userRepMock, errors);
+let domainService = require('../services/group')(domainRepMock, userRepMock, errors);
 
 const mock = require('mock-require');
 
@@ -25,19 +25,19 @@ describe('Service base', () => {
     });
 
     it('read id ', async () => {
-        let elem = await baseService.read(2);
+        let elem = await baseService.readById(2);
         expect(elem).toEqual({id:2, text:'d'});
     });
 
     it('delete', async () => {
         let elem = await baseService.baseDelete(1);
-        expect(baseService.read(1)).toThrow();
+        expect(baseService.readById(1)).toThrow();
     });
 
     it('update', async () => {
         let elements = await baseService.baseUpdate(2, {text:'ff'});
         expect(elements[0]).toEqual(1);
-        let elem = await baseService.read(2);
+        let elem = await baseService.readById(2);
         expect(elem.text).toEqual('ff');
     });
 

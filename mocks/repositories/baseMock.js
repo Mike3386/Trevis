@@ -81,6 +81,10 @@ class Mock {
 
         return [obj.length, obj];
     }
+
+    async isExist(id) {
+        return this.findById(id)!=null;
+    }
 }
 
 

@@ -16,6 +16,7 @@ module.exports = (authService) => {
         constructor(service) {
             super(service);
 
+            this.routes = {};
             this.setRoute('/', 'post', this.login);
             this.setRoute('/', 'put', this.register);
             this.setRoute('/', 'get', this.block);
