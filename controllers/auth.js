@@ -57,7 +57,7 @@ module.exports = (authService) => {
             req.body.roleId = 1;
             if(!await authService.register(req.body))
                 next(messages.wrongCredentials);
-            else res.redirect('/index');
+            else next(messages.success);
             return;
         }
 

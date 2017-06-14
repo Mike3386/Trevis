@@ -57,6 +57,5 @@ module.exports = class BaseService {
         }catch(err){
             return false;
         }
-
     }
 };
