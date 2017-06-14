@@ -58,7 +58,7 @@ module.exports = (groupService, relService) => {
         }
 
         async deleteMember(req, res, next) {
-            if(req.params.id == null || !await this.relService.isExist(req.params.id))next(message.InvalidParams(['id']));
+            if(req.params.id == null || !await this.service.isExist(req.params.id))next(message.InvalidParams(['id']));
             else {
                 let rels = await this.relService.readChunk({
                     where:{
@@ -77,7 +77,7 @@ module.exports = (groupService, relService) => {
         }
 
         async join(req, res, next) {
-            if(req.params.id == null || !await this.relService.isExist(req.params.id))next(message.InvalidParams(['id']));
+            if(req.params.id == null || !await this.service.isExist(req.params.id))next(message.InvalidParams(['id']));
             else {
                 let body = {
                     groupId: req.params.id,

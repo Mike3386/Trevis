@@ -55,6 +55,12 @@ module.exports = (messageService, userService, relService, groupService) => {
                 next(message.InvalidParams(['id']));
                 return;
             }
+
+            if((await this.relService.readChunk({where:{$and:[{userId:req.userId}, {groupId:req.params.id}]}})).data.length===0){
+                next(message.InvalidParams(['id']));
+                return;
+            }
+
             let data;
             this.service.setReadedGroup(req.query.limit||10, req.query.page||1, req.userId, req.params.id);
             data = await this.service.readChunk(
